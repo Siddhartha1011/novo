@@ -106,3 +106,55 @@ class AuthService:
             )
 
         return response
+    
+    @staticmethod
+    def forgot_password(email: str):
+
+        email = email.strip().lower()
+
+        try:
+            supabase.auth.reset_password_for_email(
+                email,
+                {
+                    "redirect_to": "http://localhost:3000/reset-password"
+                },
+            )
+
+        except Exception:
+            pass
+
+        return {
+            "message": (
+                "If an account exists for this email, "
+                "a password reset link has been sent."
+            )
+        }
+
+
+    @staticmethod
+    def resend_verification(email: str):
+
+        email = email.strip().lower()
+
+        try:
+            supabase.auth.resend(
+                {
+                    "type": "signup",
+                    "email": email,
+                    "options": {
+                        "email_redirect_to": "http://localhost:3000/verify-email"
+                    },
+                }
+            )
+
+        except Exception:
+            # Don't reveal whether an account exists.
+            pass
+
+        return {
+            "message": (
+                "If the account requires verification, "
+                "a verification email has been sent."
+            )
+        }
+        
