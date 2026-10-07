@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 
 from app.schemas.auth import (
+    ForgotPasswordRequest,
     LoginRequest,
+    ResendVerificationRequest,
     SignupRequest,
     TokenResponse,
 )
@@ -51,4 +53,21 @@ def login(data: LoginRequest):
         token_type="bearer",
         user_id=response.user.id,
         email=response.user.email,
+    )
+
+@router.post("/forgot-password")
+def forgot_password(data: ForgotPasswordRequest):
+
+    return AuthService.forgot_password(
+        str(data.email)
+    )
+
+
+@router.post("/resend-verification")
+def resend_verification(
+    data: ResendVerificationRequest,
+):
+
+    return AuthService.resend_verification(
+        str(data.email)
     )
